@@ -17,24 +17,31 @@ df['gluc'] = (df['gluc'] > 1).astype(int)
 # 4. Categorical plot
 def draw_cat_plot():
     # 5. Create DataFrame for cat plot using pd.melt
-    df_cat = pd.melt(df, id_vars=['cardio'], 
-                     value_vars=['cholesterol', 'gluc', 'smoke', 'alco', 
-                                 'active', 'overweight'])
+    df_cat = pd.melt(
+        df,
+        id_vars=['cardio'],
+        value_vars=['cholesterol', 'gluc', 'smoke', 'alco', 'active', 'overweight']
+    )
 
-    # 6. Group and reformat the data to split by cardio
+    # 6. Group and reformat the data
     df_cat = df_cat.groupby(['cardio', 'variable', 'value']).size().reset_index(name='total')
 
     # 7. Draw the catplot
-    fig = sns.catplot(
+    g = sns.catplot(
         data=df_cat,
         x="variable", y="total", hue="value", col="cardio",
         kind="bar"
     )
 
-    # 9. Save figure
+    # 8. Get the matplotlib figure from the FacetGrid
+    fig = g.fig
+
+    # 9. Save and return
     fig.savefig('catplot.png')
     return fig
 
+
+   
 
 # 10. Heat map
 def draw_heat_map():
